@@ -34,7 +34,7 @@ public class NewsModel {
 	
 	@Lob 
 	@Basic(fetch = FetchType.LAZY) 
-	@Column(name=" vcontent", columnDefinition="CLOB", nullable=true) 
+	@Column(name=" vcontent", nullable=true) 
 	private String vcontent;
 
 	

@@ -22,7 +22,7 @@
     
     <!-- <mvc:default-servlet-handler/> -->
     
-    <context:component-scan base-package="com.yuncontech.crm"/>  
+    <context:component-scan base-package="com.yuncontech.site"/>  
     
     <!-- spring mvc 配置  -->
     
@@ -64,14 +64,12 @@
     <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver"/>  
     
     <!--配置拦截器, 多个拦截器,顺序执行 -->  
-	<mvc:interceptors>    
+	<!--mvc:interceptors>    
 	    <mvc:interceptor>    
-	           <!-- 匹配的是url路径， 如果不配置或/**,将拦截所有的Controller -->  
 	        <mvc:mapping path="/**" />  
-	        <bean class="com.yuncontech.crm.web.LoginHandler"></bean>    
+	        <bean class="com.yuncontech.site.web.LoginHandler"></bean>    
 	    </mvc:interceptor>  
-	    <!-- 当设置多个拦截器时，先按顺序调用preHandle方法，然后逆序调用每个拦截器的postHandle和afterCompletion方法 -->  
-	</mvc:interceptors>
+	</mvc:interceptors-->
 
     
     <!-- jpa 配置  -->
@@ -129,7 +127,7 @@
         <!-- 注入数据源 -->  
         <property name="dataSource" ref="dataSource" />  
         <!-- 指定自动扫描的注解实体类包 -->  
-        <property name="packagesToScan" value="com.yuncontech.crm.model"/>
+        <property name="packagesToScan" value="com.yuncontech.site.model"/>
         <!-- 指定Jpa持久化实现厂商类,这里以Hibernate为例 -->  
         <property name="jpaVendorAdapter">  
             <bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">  
@@ -159,7 +157,7 @@
     </bean>  
     
     <!-- 自动扫描并注入Spring Data JPA -->  
-    <jpa:repositories base-package="com.yuncontech.crm.dao" entity-manager-factory-ref="entityManagerFactory" transaction-manager-ref="transactionManager">  
+    <jpa:repositories base-package="com.yuncontech.site.dao" entity-manager-factory-ref="entityManagerFactory" transaction-manager-ref="transactionManager">  
     </jpa:repositories>     
   
     <!--说明事务的配置使用的注解方式-->
