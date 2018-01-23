@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<beans xmlns="http://www.springframework.org/schema/beans"  
+    
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"  
+    xmlns:aop="http://www.springframework.org/schema/aop"  
+    xmlns:context="http://www.springframework.org/schema/context"  
+    xmlns:jpa="http://www.springframework.org/schema/data/jpa"  
+    xmlns:mvc="http://www.springframework.org/schema/mvc"  
+    xmlns:tx="http://www.springframework.org/schema/tx"  
+    xmlns:util="http://www.springframework.org/schema/util"  
+    
+   xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd  
+        http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd  
+        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd  
+        http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd  
+        http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd  
+        http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd  
+        http://www.springframework.org/schema/data/jpa http://www.springframework.org/schema/data/jpa/spring-jpa-1.3.xsd"> 
+          
+      <!--默认注解映射的支持 -->
+    <!-- <mvc:annotation-driven /> -->
+    
+    <!-- <mvc:default-servlet-handler/> -->
+    
+    <context:component-scan base-package="com.yuncontech.crm"/>  
+    
+    <!-- spring mvc 配置  -->
+    
+    <bean id="fastJsonHttpMessageConverter"  
+        class="com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter">  
+        <property name="supportedMediaTypes">
+            <list>
+               <value>application/json;charset=UTF-8</value>
+            </list>
+         </property>
+         <property name="features">
+            <array>
+               <value>DisableCircularReferenceDetect</value>
+            </array>
+         </property> 
+    </bean>  
+    
+    <bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter">  
+        <property name="messageConverters">  
+            <list>  
+                <ref bean="fastJsonHttpMessageConverter" />  
+            </list>  
+        </property>  
+    </bean>  
+    
+    <!-- 去掉依赖引用，返回的json里面如果有对象相互引用的话，会返回$ref -->
+    <bean id="DisableCircularReferenceDetect" class="org.springframework.beans.factory.config.FieldRetrievingFactoryBean">
+	   <property name="staticField" value="com.alibaba.fastjson.serializer.SerializerFeature.DisableCircularReferenceDetect"></property>
+	</bean>
+    
+    <!-- 对模型视图名称的解析，即在模型视图名称添加前后缀 -->  
+    <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">  
+        <property name="viewClass" value="org.springframework.web.servlet.view.JstlView" />  
+        <property name="prefix" value="/WEB-INF/view/"></property>  
+        <property name="suffix" value=".jsp"></property>  
+    </bean>  
+  
+    <!-- 支持上传文件 -->    
+    <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver"/>  
+    
+    <!--配置拦截器, 多个拦截器,顺序执行 -->  
+	<mvc:interceptors>    
+	    <mvc:interceptor>    
+	           <!-- 匹配的是url路径， 如果不配置或/**,将拦截所有的Controller -->  
+	        <mvc:mapping path="/**" />  
+	        <bean class="com.yuncontech.crm.web.LoginHandler"></bean>    
+	    </mvc:interceptor>  
+	    <!-- 当设置多个拦截器时，先按顺序调用preHandle方法，然后逆序调用每个拦截器的postHandle和afterCompletion方法 -->  
+	</mvc:interceptors>
+
+    
+    <!-- jpa 配置  -->
+    
+    <bean class="org.springframework.context.support.PropertySourcesPlaceholderConfigurer">
+      <property name="locations">
+        <list>
+          <value>classpath:jdbc.properties</value>
+        </list>
+      </property>
+      <property name="ignoreUnresolvablePlaceholders" value="true"/>
+    </bean>
+      
+    <!-- 定义数据源 使用druid连接池 -->  
+    <bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource" init-method="init" destroy-method="close">  
+        <property name="driverClassName" value="${jdbc.driver}" />  
+        <property name="url" value="${jdbc.url}" />  
+        <property name="username" value="${jdbc.username}" />  
+        <property name="password" value="${jdbc.password}" />  
+        <!-- 初始化连接数量 type:int -->  
+        <property name="initialSize" value="${druid.initialSize}" />  
+        <!-- 最大并发数量 type:int -->  
+        <property name="maxActive" value="${druid.maxActive}" />  
+        <!-- 最小空闲数量 type:int -->  
+        <property name="minIdle" value="${druid.minIdle}" />  
+        <!-- 配置获取连接等待超时的时间,单位：毫秒 type:long -->  
+        <!-- <property name="maxWait" value="${druid.maxWait}" /> -->  
+        <!-- 超过时间限制是否回收 type:boolean -->  
+        <property name="removeAbandoned" value="${druid.removeAbandoned}" />  
+        <!-- 上述回收超时时间 单位：秒 type:long -->  
+        <property name="removeAbandonedTimeout" value="${druid.removeAbandonedTimeout}" />  
+        <!-- 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒 -->  
+        <property name="timeBetweenEvictionRunsMillis" value="${druid.timeBetweenEvictionRunsMillis}" />  
+        <!-- 配置一个连接在池中最小生存的时间，单位是毫秒 -->  
+        <property name="minEvictableIdleTimeMillis" value="${druid.minEvictableIdleTimeMillis}" />  
+        <!-- 测试有效用的SQL Query -->  
+        <!-- <property name="validationQuery" value="SELECT 'x'" />  -->
+        <!-- 申请连接的时候检测 type:boolean -->  
+        <property name="testWhileIdle" value="false" />  
+        <!-- 申请连接时执行validationQuery检测连接是否有效，配置为true会降低性能 -->  
+        <property name="testOnBorrow" value="false" />  
+        <!-- 归还连接时执行validationQuery检测连接是否有效，配置为true会降低性能  -->  
+        <property name="testOnReturn" value="false" />  
+        <!-- 开启PSCache，并且指定每个连接上PSCache的大小 -->  
+        <property name="poolPreparedStatements" value="${druid.poolPreparedStatements}" />
+        <property name="maxPoolPreparedStatementPerConnectionSize" value="${druid.maxPoolPreparedStatementPerConnectionSize}" />  
+        <!--属性类型是字符串，通过别名的方式配置扩展插件，常用的插件有：                   
+                        监控统计用的filter:stat  
+                        日志用的filter:log4j  
+                       防御SQL注入的filter:wall -->  
+        <property name="filters" value="stat" />  
+    </bean>  
+    
+    <bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">  
+        <!-- 注入数据源 -->  
+        <property name="dataSource" ref="dataSource" />  
+        <!-- 指定自动扫描的注解实体类包 -->  
+        <property name="packagesToScan" value="com.yuncontech.crm.model"/>
+        <!-- 指定Jpa持久化实现厂商类,这里以Hibernate为例 -->  
+        <property name="jpaVendorAdapter">  
+            <bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">  
+                <property name="showSql" value="true"></property>  
+                <property name="database" value="MYSQL"></property>  
+            </bean>  
+        </property>  
+        <property name="jpaProperties">  
+            <props>  
+                 <!--设置外连接抓取树的最大深度 -->  
+                <prop key="hibernate.max_fetch_depth">3</prop>  
+                <prop key="hibernate.jdbc.fetch_size">18</prop>  
+                <prop key="hibernate.jdbc.batch_size">10</prop>  
+                <prop key="hibernate.dialect">${hibernate.dialect}</prop>  
+                <prop key="hibernate.ejb.naming_strategy">org.hibernate.cfg.ImprovedNamingStrategy</prop>  
+                <prop key="hibernate.show_sql">${hibernate.show_sql}</prop>  
+                <prop key="hibernate.format_sql">${hibernate.format_sql}</prop>  
+                <!-- 自动建表类型 validate|create|create-drop|update --> 
+                <prop key="hibernate.hbm2ddl.auto">${hibernate.hbm2ddl.auto}</prop>  
+            </props>  
+        </property>  
+    </bean>  
+    
+    <!-- 配置事务管理器 -->  
+    <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">  
+        <property name="entityManagerFactory" ref="entityManagerFactory" />  
+    </bean>  
+    
+    <!-- 自动扫描并注入Spring Data JPA -->  
+    <jpa:repositories base-package="com.yuncontech.crm.dao" entity-manager-factory-ref="entityManagerFactory" transaction-manager-ref="transactionManager">  
+    </jpa:repositories>     
+  
+    <!--说明事务的配置使用的注解方式-->
+    <tx:annotation-driven transaction-manager="transactionManager" proxy-target-class="false"/> 
+    
+</beans>  
