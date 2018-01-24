@@ -7,7 +7,7 @@ Dark Gray: #727272;
 ================================================ */
 
 body {
-    font-family: 'Open Sans', sans-serif;
+    font-family: helvetica,arial,"Microsoft YaHei","Heiti SC";
     font-weight: 300;
     overflow-x: hidden;
 }
@@ -39,7 +39,7 @@ p {
 }
 a {
     font-size: 15px;
-    font-family: 'Open Sans', sans-serif;
+    font-family: helvetica,arial,"Microsoft YaHei","Heiti SC";
     color: #24C0D9;
     font-weight: 400;
     letter-spacing: .3px;

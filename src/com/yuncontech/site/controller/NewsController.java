@@ -16,32 +16,42 @@ import com.yuncontech.site.servic.NewsService;
 @RequestMapping(value = "/news")
 public class NewsController {
 
+	public static int PAGE_SIZE = 20;
+	
 	@Autowired
 	private NewsService newsService;
 
-	//获取首页最新的信息，默认显示10条
+	//获取首页最新的信息，默认显示8条
 	@RequestMapping(value = "/last", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE + ";charset=UTF-8")
 	@ResponseBody
 	public NewsBean lastNews() {
 		NewsBean bean = new NewsBean();
+		bean.setToplist(newsService.lastNews());
 		return bean;
 	}
 
 	//显示新闻列表
 	@RequestMapping(value = "/page/{pagenum}", method = RequestMethod.GET)
 	public ModelAndView getNewsPage(@PathVariable("pagenum") Integer pagenum) {
+		if(pagenum == null){
+			pagenum = 1;
+		}
+		NewsBean bean = new NewsBean();
+		bean.setPage(newsService.findPage(pagenum, PAGE_SIZE));
 		ModelAndView mav = new ModelAndView();  
-//		mav.addObject("newsPage", bean);  
+		mav.addObject("newsBean", bean);  
+		mav.addObject("pagenum", pagenum);  
 		mav.setViewName("newsList");  
 		return mav;  
 	}
 	
 	//新闻详细内容
 	@RequestMapping(value = "/info/{id}", method = RequestMethod.GET)
-	@ResponseBody
-	public ModelAndView getNewsInfo(@PathVariable("id") Integer id) {
+	public ModelAndView getNewsInfo(@PathVariable("id") Long id) {
+		NewsBean bean = new NewsBean();
+		bean.setNews(newsService.findNewsById(id));
 		ModelAndView mav = new ModelAndView();  
-//		mav.addObject("newsPage", bean);  
+		mav.addObject("newsBean", bean);  
 		mav.setViewName("newsInfo");  
 		return mav;
 	}

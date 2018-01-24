@@ -22,7 +22,7 @@ $(document).ready(function() {
         });
     });
 
-    // Owl Carousel
+    // Owl Carousel 幻灯片
 //    $(document).ready(function() {
 //        $("#owl-demo").owlCarousel({
 //
@@ -51,9 +51,16 @@ $(document).ready(function() {
     );
     wow.init();
 
-    // Prettyphoto Installation
+    // Prettyphoto Installation  图片查看组件
 //    $(document).ready(function(){
 //        $("a[class^='prettyPhoto']").prettyPhoto();
 //    }); 
 
+	var _hmt = _hmt || [];
+	(function() {
+	  var hm = document.createElement("script");
+	  hm.src = "https://hm.baidu.com/hm.js?1ebcd8df65a9d796b492f7aac7468ee3";
+	  var s = document.getElementsByTagName("script")[0]; 
+	  s.parentNode.insertBefore(hm, s);
+	})();
 });
