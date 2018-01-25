@@ -125,7 +125,34 @@
                             </li>
 	                    </c:otherwise>
 	                </c:choose>
-				    <li class="active"><a href="${contextPath}/news/page/${pagenum}">${pagenum}</a></li>
+				    
+				    <c:choose>
+                        <c:when test="${newsBean.page.totalPages <= 7}">
+                            <c:var="x" begin="1" end="${newsBean.page.totalPages}" step="1">
+                                <li <c:if test="${x == pagenum}">class="active"</c:if>><a href="${contextPath}/news/page/${x}">${x}</a></li>
+                            </c:forEach>
+                        </c:when>
+                        <c:otherwise>
+                            <c:choose>
+		                        <c:when test="${pagenum <= 3}">
+		                            <c:var="x" begin="1" end="6" step="1">
+		                                <li <c:if test="${x == pagenum}">class="active"</c:if>><a href="${contextPath}/news/page/${x}">${x}</a></li>
+		                            </c:forEach>
+		                        </c:when>
+		                        <c:when test="${pagenum >= newsBean.page.totalPages - 3}">
+		                            <c:var="x" begin="${pagenum - 7}" end="${newsBean.page.totalPages}" step="1">
+                                        <li <c:if test="${x == pagenum}">class="active"</c:if>><a href="${contextPath}/news/page/${x}">${x}</a></li>
+                                    </c:forEach>
+		                        </c:when>
+		                        <c:otherwise>
+		                            <c:var="x" begin="${newsBean.page.totalPages - 3}" end="${newsBean.page.totalPages + 3}" step="1">
+                                        <li <c:if test="${x == pagenum}">class="active"</c:if>><a href="${contextPath}/news/page/${x}">${x}</a></li>
+                                    </c:forEach>
+		                        </c:otherwise>
+		                    </c:choose>  
+                        </c:otherwise>
+                    </c:choose>   
+				    
 				    <c:choose>
                         <c:when test="${newsBean.page.first != true}">
                             <li>

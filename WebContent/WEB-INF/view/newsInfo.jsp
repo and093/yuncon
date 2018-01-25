@@ -100,8 +100,7 @@
 	                    <div>来源：${newsBean.news.srcurl}</div>
                     </div>
                     <div class="text-left wow fadeInRight" data-wow-duration="1s" data-wow-delay=".3s"
-                        style="min-height:300px;margin-bottom:20px;"
-                    > 
+                        style="min-height:300px;margin-bottom:20px;"> 
                         ${newsBean.news.vcontent}
 					</div>
                 </div>
