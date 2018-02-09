@@ -2,14 +2,14 @@ package com.yuncontech.site.model;
 
 import java.util.Date;
 
-import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.Lob;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -45,10 +45,9 @@ public class NewsModel {
 	@Column(name = "imgurl", length = 200)
 	private String imgurl;
 	
-	@Lob 
-	@Basic(fetch = FetchType.LAZY) 
-	@Column(name=" vcontent", nullable=true) 
-	private String vcontent;
+	@OneToOne(fetch=FetchType.LAZY)
+	@JoinColumn(name="pk_news_content")
+	private NewsContentModel vcontent;
 
 	@Temporal(TemporalType.TIMESTAMP) 
 	@Column(name = "createtime")
@@ -127,12 +126,12 @@ public class NewsModel {
 		this.srcurl = srcurl;
 	}
 
-	public String getVcontent() {
+	public NewsContentModel getVcontent() {
 		return vcontent;
 	}
 
-	public void setVcontent(String vcontent) {
+	public void setVcontent(NewsContentModel vcontent) {
 		this.vcontent = vcontent;
 	}
-	
+
 }

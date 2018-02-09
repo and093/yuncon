@@ -101,7 +101,7 @@
                     </div>
                     <div class="text-left wow fadeInRight" data-wow-duration="1s" data-wow-delay=".3s"
                         style="min-height:300px;margin-bottom:20px;"> 
-                        ${newsBean.news.vcontent}
+                        ${newsBean.news.vcontent.vcontent}
 					</div>
                 </div>
             </div>

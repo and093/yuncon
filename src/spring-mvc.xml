@@ -147,6 +147,7 @@
                 <prop key="hibernate.format_sql">${hibernate.format_sql}</prop>  
                 <!-- 自动建表类型 validate|create|create-drop|update --> 
                 <prop key="hibernate.hbm2ddl.auto">${hibernate.hbm2ddl.auto}</prop>  
+                <prop key="hibernate.enable_lazy_load_no_trans">true</prop>
             </props>  
         </property>  
     </bean>  
